@@ -25,19 +25,19 @@ timeout = 3
 
 
 def run():
-        channel = implementations.insecure_channel(host, port)
-        connect = api_pb2.beta_create_PublicAPI_stub(channel)
-        del channel
+    channel = implementations.insecure_channel(host, port)
+    connect = api_pb2.beta_create_PublicAPI_stub(channel)
+    del channel
 
-        list_pods = connect.ListPods(api_pb2.ListPodsRequest(), timeout)
-        pods_running = filter(lambda pod: pod.state is api_pb2.POD_STATE_RUNNING, list_pods.pods)
-        for pod_running in pods_running:
-            print 'Pod "%s" is running' % pod_running.id
+    list_pods = connect.ListPods(api_pb2.ListPodsRequest(), timeout)
+    pods_running = filter(lambda pod: pod.state is api_pb2.POD_STATE_RUNNING, list_pods.pods)
+    for pod_running in pods_running:
+        print 'Pod "%s" is running' % pod_running.id
 
-        list_images = connect.ListImages(api_pb2.ListImagesRequest(), timeout)
-        images = filter(lambda image: "coreos.com" in image.name, list_images.images)
-        for list_prefix in images:
-            print 'Found image "%s"' % list_prefix.name
+    list_images = connect.ListImages(api_pb2.ListImagesRequest(), timeout)
+    images = filter(lambda image: "coreos.com" in image.name, list_images.images)
+    for list_prefix in images:
+        print 'Found image "%s"' % list_prefix.name
 
 if __name__ == '__main__':
     run()

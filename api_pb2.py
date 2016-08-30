@@ -1655,98 +1655,268 @@ GetLogsResponse = _reflection.GeneratedProtocolMessageType('GetLogsResponse', (_
 _sym_db.RegisterMessage(GetLogsResponse)
 
 
-import abc
+import grpc
 from grpc.beta import implementations as beta_implementations
+from grpc.beta import interfaces as beta_interfaces
 from grpc.framework.common import cardinality
 from grpc.framework.interfaces.face import utilities as face_utilities
 
-class BetaPublicAPIServicer(object):
-  """<fill me in later!>"""
-  __metaclass__ = abc.ABCMeta
-  @abc.abstractmethod
+
+class PublicAPIStub(object):
+  """PublicAPI defines the read-only APIs that will be supported.
+  These will be handled over TCP sockets.
+  """
+
+  def __init__(self, channel):
+    """Constructor.
+
+    Args:
+      channel: A grpc.Channel.
+    """
+    self.GetInfo = channel.unary_unary(
+        '/v1alpha.PublicAPI/GetInfo',
+        request_serializer=GetInfoRequest.SerializeToString,
+        response_deserializer=GetInfoResponse.FromString,
+        )
+    self.ListPods = channel.unary_unary(
+        '/v1alpha.PublicAPI/ListPods',
+        request_serializer=ListPodsRequest.SerializeToString,
+        response_deserializer=ListPodsResponse.FromString,
+        )
+    self.InspectPod = channel.unary_unary(
+        '/v1alpha.PublicAPI/InspectPod',
+        request_serializer=InspectPodRequest.SerializeToString,
+        response_deserializer=InspectPodResponse.FromString,
+        )
+    self.ListImages = channel.unary_unary(
+        '/v1alpha.PublicAPI/ListImages',
+        request_serializer=ListImagesRequest.SerializeToString,
+        response_deserializer=ListImagesResponse.FromString,
+        )
+    self.InspectImage = channel.unary_unary(
+        '/v1alpha.PublicAPI/InspectImage',
+        request_serializer=InspectImageRequest.SerializeToString,
+        response_deserializer=InspectImageResponse.FromString,
+        )
+    self.ListenEvents = channel.unary_stream(
+        '/v1alpha.PublicAPI/ListenEvents',
+        request_serializer=ListenEventsRequest.SerializeToString,
+        response_deserializer=ListenEventsResponse.FromString,
+        )
+    self.GetLogs = channel.unary_stream(
+        '/v1alpha.PublicAPI/GetLogs',
+        request_serializer=GetLogsRequest.SerializeToString,
+        response_deserializer=GetLogsResponse.FromString,
+        )
+
+
+class PublicAPIServicer(object):
+  """PublicAPI defines the read-only APIs that will be supported.
+  These will be handled over TCP sockets.
+  """
+
   def GetInfo(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """GetInfo gets the rkt's information on the machine.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def ListPods(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """ListPods lists rkt pods on the machine.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def InspectPod(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """InspectPod gets detailed pod information of the specified pod.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def ListImages(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """ListImages lists the images on the machine.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def InspectImage(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """InspectImage gets the detailed image information of the specified image.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def ListenEvents(self, request, context):
-    raise NotImplementedError()
-  @abc.abstractmethod
+    """ListenEvents listens for the events, it will return a response stream
+    that will contain event objects.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def GetLogs(self, request, context):
-    raise NotImplementedError()
+    """GetLogs gets the logs for a pod, if the app is also specified, then only the logs
+    of the app will be returned.
+
+    If 'follow' in the 'GetLogsRequest' is set to 'true', then the response stream
+    will not be closed after the first response, the future logs will be sent via
+    the stream.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+
+def add_PublicAPIServicer_to_server(servicer, server):
+  rpc_method_handlers = {
+      'GetInfo': grpc.unary_unary_rpc_method_handler(
+          servicer.GetInfo,
+          request_deserializer=GetInfoRequest.FromString,
+          response_serializer=GetInfoResponse.SerializeToString,
+      ),
+      'ListPods': grpc.unary_unary_rpc_method_handler(
+          servicer.ListPods,
+          request_deserializer=ListPodsRequest.FromString,
+          response_serializer=ListPodsResponse.SerializeToString,
+      ),
+      'InspectPod': grpc.unary_unary_rpc_method_handler(
+          servicer.InspectPod,
+          request_deserializer=InspectPodRequest.FromString,
+          response_serializer=InspectPodResponse.SerializeToString,
+      ),
+      'ListImages': grpc.unary_unary_rpc_method_handler(
+          servicer.ListImages,
+          request_deserializer=ListImagesRequest.FromString,
+          response_serializer=ListImagesResponse.SerializeToString,
+      ),
+      'InspectImage': grpc.unary_unary_rpc_method_handler(
+          servicer.InspectImage,
+          request_deserializer=InspectImageRequest.FromString,
+          response_serializer=InspectImageResponse.SerializeToString,
+      ),
+      'ListenEvents': grpc.unary_stream_rpc_method_handler(
+          servicer.ListenEvents,
+          request_deserializer=ListenEventsRequest.FromString,
+          response_serializer=ListenEventsResponse.SerializeToString,
+      ),
+      'GetLogs': grpc.unary_stream_rpc_method_handler(
+          servicer.GetLogs,
+          request_deserializer=GetLogsRequest.FromString,
+          response_serializer=GetLogsResponse.SerializeToString,
+      ),
+  }
+  generic_handler = grpc.method_handlers_generic_handler(
+      'v1alpha.PublicAPI', rpc_method_handlers)
+  server.add_generic_rpc_handlers((generic_handler,))
+
+
+class BetaPublicAPIServicer(object):
+  """PublicAPI defines the read-only APIs that will be supported.
+  These will be handled over TCP sockets.
+  """
+  def GetInfo(self, request, context):
+    """GetInfo gets the rkt's information on the machine.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def ListPods(self, request, context):
+    """ListPods lists rkt pods on the machine.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def InspectPod(self, request, context):
+    """InspectPod gets detailed pod information of the specified pod.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def ListImages(self, request, context):
+    """ListImages lists the images on the machine.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def InspectImage(self, request, context):
+    """InspectImage gets the detailed image information of the specified image.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def ListenEvents(self, request, context):
+    """ListenEvents listens for the events, it will return a response stream
+    that will contain event objects.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+  def GetLogs(self, request, context):
+    """GetLogs gets the logs for a pod, if the app is also specified, then only the logs
+    of the app will be returned.
+
+    If 'follow' in the 'GetLogsRequest' is set to 'true', then the response stream
+    will not be closed after the first response, the future logs will be sent via
+    the stream.
+    """
+    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+
 
 class BetaPublicAPIStub(object):
-  """The interface to which stubs will conform."""
-  __metaclass__ = abc.ABCMeta
-  @abc.abstractmethod
-  def GetInfo(self, request, timeout):
+  """PublicAPI defines the read-only APIs that will be supported.
+  These will be handled over TCP sockets.
+  """
+  def GetInfo(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """GetInfo gets the rkt's information on the machine.
+    """
     raise NotImplementedError()
   GetInfo.future = None
-  @abc.abstractmethod
-  def ListPods(self, request, timeout):
+  def ListPods(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """ListPods lists rkt pods on the machine.
+    """
     raise NotImplementedError()
   ListPods.future = None
-  @abc.abstractmethod
-  def InspectPod(self, request, timeout):
+  def InspectPod(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """InspectPod gets detailed pod information of the specified pod.
+    """
     raise NotImplementedError()
   InspectPod.future = None
-  @abc.abstractmethod
-  def ListImages(self, request, timeout):
+  def ListImages(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """ListImages lists the images on the machine.
+    """
     raise NotImplementedError()
   ListImages.future = None
-  @abc.abstractmethod
-  def InspectImage(self, request, timeout):
+  def InspectImage(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """InspectImage gets the detailed image information of the specified image.
+    """
     raise NotImplementedError()
   InspectImage.future = None
-  @abc.abstractmethod
-  def ListenEvents(self, request, timeout):
+  def ListenEvents(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """ListenEvents listens for the events, it will return a response stream
+    that will contain event objects.
+    """
     raise NotImplementedError()
-  @abc.abstractmethod
-  def GetLogs(self, request, timeout):
+  def GetLogs(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    """GetLogs gets the logs for a pod, if the app is also specified, then only the logs
+    of the app will be returned.
+
+    If 'follow' in the 'GetLogsRequest' is set to 'true', then the response stream
+    will not be closed after the first response, the future logs will be sent via
+    the stream.
+    """
     raise NotImplementedError()
 
+
 def beta_create_PublicAPI_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
   request_deserializers = {
-    ('v1alpha.PublicAPI', 'GetInfo'): api_pb2.GetInfoRequest.FromString,
-    ('v1alpha.PublicAPI', 'GetLogs'): api_pb2.GetLogsRequest.FromString,
-    ('v1alpha.PublicAPI', 'InspectImage'): api_pb2.InspectImageRequest.FromString,
-    ('v1alpha.PublicAPI', 'InspectPod'): api_pb2.InspectPodRequest.FromString,
-    ('v1alpha.PublicAPI', 'ListImages'): api_pb2.ListImagesRequest.FromString,
-    ('v1alpha.PublicAPI', 'ListPods'): api_pb2.ListPodsRequest.FromString,
-    ('v1alpha.PublicAPI', 'ListenEvents'): api_pb2.ListenEventsRequest.FromString,
+    ('v1alpha.PublicAPI', 'GetInfo'): GetInfoRequest.FromString,
+    ('v1alpha.PublicAPI', 'GetLogs'): GetLogsRequest.FromString,
+    ('v1alpha.PublicAPI', 'InspectImage'): InspectImageRequest.FromString,
+    ('v1alpha.PublicAPI', 'InspectPod'): InspectPodRequest.FromString,
+    ('v1alpha.PublicAPI', 'ListImages'): ListImagesRequest.FromString,
+    ('v1alpha.PublicAPI', 'ListPods'): ListPodsRequest.FromString,
+    ('v1alpha.PublicAPI', 'ListenEvents'): ListenEventsRequest.FromString,
   }
   response_serializers = {
-    ('v1alpha.PublicAPI', 'GetInfo'): api_pb2.GetInfoResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'GetLogs'): api_pb2.GetLogsResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'InspectImage'): api_pb2.InspectImageResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'InspectPod'): api_pb2.InspectPodResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListImages'): api_pb2.ListImagesResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListPods'): api_pb2.ListPodsResponse.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListenEvents'): api_pb2.ListenEventsResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'GetInfo'): GetInfoResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'GetLogs'): GetLogsResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'InspectImage'): InspectImageResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'InspectPod'): InspectPodResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListImages'): ListImagesResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListPods'): ListPodsResponse.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListenEvents'): ListenEventsResponse.SerializeToString,
   }
   method_implementations = {
     ('v1alpha.PublicAPI', 'GetInfo'): face_utilities.unary_unary_inline(servicer.GetInfo),
@@ -1760,38 +1930,25 @@ def beta_create_PublicAPI_server(servicer, pool=None, pool_size=None, default_ti
   server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
   return beta_implementations.server(method_implementations, options=server_options)
 
+
 def beta_create_PublicAPI_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
-  import api_pb2
   request_serializers = {
-    ('v1alpha.PublicAPI', 'GetInfo'): api_pb2.GetInfoRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'GetLogs'): api_pb2.GetLogsRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'InspectImage'): api_pb2.InspectImageRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'InspectPod'): api_pb2.InspectPodRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListImages'): api_pb2.ListImagesRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListPods'): api_pb2.ListPodsRequest.SerializeToString,
-    ('v1alpha.PublicAPI', 'ListenEvents'): api_pb2.ListenEventsRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'GetInfo'): GetInfoRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'GetLogs'): GetLogsRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'InspectImage'): InspectImageRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'InspectPod'): InspectPodRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListImages'): ListImagesRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListPods'): ListPodsRequest.SerializeToString,
+    ('v1alpha.PublicAPI', 'ListenEvents'): ListenEventsRequest.SerializeToString,
   }
   response_deserializers = {
-    ('v1alpha.PublicAPI', 'GetInfo'): api_pb2.GetInfoResponse.FromString,
-    ('v1alpha.PublicAPI', 'GetLogs'): api_pb2.GetLogsResponse.FromString,
-    ('v1alpha.PublicAPI', 'InspectImage'): api_pb2.InspectImageResponse.FromString,
-    ('v1alpha.PublicAPI', 'InspectPod'): api_pb2.InspectPodResponse.FromString,
-    ('v1alpha.PublicAPI', 'ListImages'): api_pb2.ListImagesResponse.FromString,
-    ('v1alpha.PublicAPI', 'ListPods'): api_pb2.ListPodsResponse.FromString,
-    ('v1alpha.PublicAPI', 'ListenEvents'): api_pb2.ListenEventsResponse.FromString,
+    ('v1alpha.PublicAPI', 'GetInfo'): GetInfoResponse.FromString,
+    ('v1alpha.PublicAPI', 'GetLogs'): GetLogsResponse.FromString,
+    ('v1alpha.PublicAPI', 'InspectImage'): InspectImageResponse.FromString,
+    ('v1alpha.PublicAPI', 'InspectPod'): InspectPodResponse.FromString,
+    ('v1alpha.PublicAPI', 'ListImages'): ListImagesResponse.FromString,
+    ('v1alpha.PublicAPI', 'ListPods'): ListPodsResponse.FromString,
+    ('v1alpha.PublicAPI', 'ListenEvents'): ListenEventsResponse.FromString,
   }
   cardinalities = {
     'GetInfo': cardinality.Cardinality.UNARY_UNARY,
